@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import common.Constants;
 import monster.Monsters;
 import utils.json.JsonUtils;
 
@@ -29,7 +30,7 @@ public class ProcessMonsters {
     public ObjectNode getMonsterList(String monsterInput){
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode monsterNode = mapper.createObjectNode();
-        monsterNode.putPOJO("Monsters", getMonsterArray(monsterInput));
+        monsterNode.putPOJO(Constants.Monsters, getMonsterArray(monsterInput));
         return monsterNode;
     }
 
@@ -42,9 +43,7 @@ public class ProcessMonsters {
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode monsterNode = mapper.createArrayNode();
 
-        monsters.stream().forEach(monster -> {
-            monsterNode.add(getMonsterJson(monster));
-        });
+        monsters.stream().forEach(monster -> monsterNode.add(getMonsterJson(monster)));
 
         return monsterNode;
     }
@@ -53,12 +52,12 @@ public class ProcessMonsters {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode monsterNode = mapper.createObjectNode();
 
-        List<String> monsterValues = Arrays.asList(monster.split("\\n\\n"));
+        List<String> monsterValues = Arrays.asList(monster.split(Constants.DoubleReturn));
 
-        String[] monsterNameSizeAlignment = monsterValues.get(0).split("\\n");
+        String[] monsterNameSizeAlignment = monsterValues.get(0).split(Constants.Return);
         String monsterName = monsterNameSizeAlignment[0];
-        String size = monsterNameSizeAlignment[1].split(",")[0].trim();
-        String alignment = monsterNameSizeAlignment[1].split(",")[1].trim();
+        String size = monsterNameSizeAlignment[1].split(Constants.Comma)[0].trim();
+        String alignment = monsterNameSizeAlignment[1].split(Constants.Comma)[1].trim();
 
         monsterNode.put(Constants.MonsterName,monsterName);
         monsterNode.put(Constants.Size,size);
@@ -82,12 +81,12 @@ public class ProcessMonsters {
         }
 
         if(legendaryIndex > -1){
-            monsterNode.putPOJO("Legendary Actions", createArrayNode(monsterValues.subList(legendaryIndex + 1,monsterValues.size())));
-            monsterNode.putPOJO("Actions", createArrayNode(monsterValues.subList(actionIndex + 1, legendaryIndex)));
+            monsterNode.putPOJO(Constants.LegendaryActionsCamel, createArrayNode(monsterValues.subList(legendaryIndex + 1,monsterValues.size())));
+            monsterNode.putPOJO(Constants.ActionsCamel, createArrayNode(monsterValues.subList(actionIndex + 1, legendaryIndex)));
         }
         else if(reactionIndex > -1){
-            monsterNode.putPOJO("Reactions", createArrayNode(monsterValues.subList(reactionIndex + 1,monsterValues.size())));
-            monsterNode.putPOJO("Actions", createArrayNode(monsterValues.subList(actionIndex + 1, reactionIndex)));
+            monsterNode.putPOJO(Constants.ReactionsCamel, createArrayNode(monsterValues.subList(reactionIndex + 1,monsterValues.size())));
+            monsterNode.putPOJO(Constants.ActionsCamel, createArrayNode(monsterValues.subList(actionIndex + 1, reactionIndex)));
         }
         else
         {
@@ -99,18 +98,18 @@ public class ProcessMonsters {
 
     private ArrayNode createArrayNode(List<String> info) {
         ObjectMapper mapper = new ObjectMapper();
-        ArrayNode additonalInformation = mapper.createArrayNode();
-        info.forEach(s -> additonalInformation.add(s));
-        return additonalInformation;
+        ArrayNode additionalInformation = mapper.createArrayNode();
+        info.forEach(additionalInformation::add);
+        return additionalInformation;
     }
 
     protected Collection<String> getMonsterInformation(String monsterInput) {
         Collection<String> monsterNames = findMonsterNames(monsterInput);
         Collection<String> monsterInfo = new ArrayList<>();
-        Stream<String> monsterStream = monsterNames.stream();
 
-        //TODO: Convert to stream
-        /*monsterStream.forEach((monsterName) -> {
+       //TODO: Convert to stream
+        /* Stream<String> monsterStream = monsterNames.stream();
+        monsterStream.forEach((monsterName) -> {
 
         });*/
 
@@ -128,14 +127,11 @@ public class ProcessMonsters {
         Pattern pattern = Pattern.compile(Constants.CapitalWordRegex);
         Matcher matcher = pattern.matcher(monsterInput);
 
-        int counter = 0;
-
         while(matcher.find()){
             String monsterName = matcher.group(0).trim();
-            if(!(monsterName.equals(Constants.Charisma) || monsterName.equals(Constants.Actions) || monsterName.equals(Constants.LegendaryActions))){
+            if(!(monsterName.equals(Constants.CHA) || monsterName.equals(Constants.Actions) || monsterName.equals(Constants.LegendaryActions))){
                 monsterNames.add(monsterName);
             }
-            counter++;
         }
 
         return monsterNames;
@@ -146,17 +142,17 @@ public class ProcessMonsters {
         ObjectMapper mapper = new ObjectMapper();
 
         if(attribute.startsWith(Constants.ArmorClass)){
-            monsterNode.put(Constants.ArmorClass, attribute.replace(Constants.ArmorClass,"").trim());
+            monsterNode.put(Constants.ArmorClass, attribute.replace(Constants.ArmorClass,Constants.Empty).trim());
             return false;
         }
 
         if(attribute.startsWith(Constants.HitPonts)){
-            monsterNode.put(Constants.ArmorClass, attribute.replace(Constants.ArmorClass,"").trim());
+            monsterNode.put(Constants.ArmorClass, attribute.replace(Constants.ArmorClass,Constants.Empty).trim());
             return false;
         }
 
         if(attribute.startsWith(Constants.Speed)){
-            monsterNode.put(Constants.Speed, attribute.replace(Constants.Speed,"").trim());
+            monsterNode.put(Constants.Speed, attribute.replace(Constants.Speed,Constants.Empty).trim());
             return false;
         }
 
@@ -187,9 +183,9 @@ public class ProcessMonsters {
         }
 
         if (attribute.startsWith(Constants.Challenge)){
-            String[] challenge = attribute.replace(Constants.Challenge,"").split("\\(");
+            String[] challenge = attribute.replace(Constants.Challenge,Constants.Empty).split(Constants.OpenParen);
             monsterNode.put(Constants.Challenge,challenge[0]);
-            monsterNode.put(Constants.Experience,challenge[1].replace("\\)",""));
+            monsterNode.put(Constants.Experience,challenge[1].replace(Constants.CloseParen,Constants.Empty));
             return true;
         }
 
@@ -214,21 +210,21 @@ public class ProcessMonsters {
     private void attachArrayNode(String attributeInput, String attributeName, ObjectNode rootNode) {
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode arrayNode = mapper.createArrayNode();
-        String[] attributes = attributeInput.replace(attributeName, "").split(",");
+        String[] attributes = attributeInput.replace(attributeName, Constants.Empty).split(Constants.Comma);
         Stream<String> attributeStream = Stream.of(attributes);
-        attributeStream.forEach(attribute -> arrayNode.add(attribute));
+        attributeStream.forEach(arrayNode::add);
         rootNode.putPOJO(attributeName,arrayNode);
     }
 
     private ObjectNode getStatisticsNode(String attribute, ObjectMapper mapper) {
         ObjectNode statsNode = mapper.createObjectNode();
-        String[] statistics = attribute.replace(Constants.StatisticList,"").trim().split("\\t");
-        statsNode.put("Strength", statistics[0]);
-        statsNode.put("Dexterity", statistics[1]);
-        statsNode.put("Constitution", statistics[2]);
-        statsNode.put("Intelligence", statistics[3]);
-        statsNode.put("Wisdom", statistics[4]);
-        statsNode.put("Charisma", statistics[5]);
+        String[] statistics = attribute.replace(Constants.StatisticList,Constants.Empty).trim().split(Constants.Tab);
+        statsNode.put(Constants.Strength, statistics[0]);
+        statsNode.put(Constants.Dexterity, statistics[1]);
+        statsNode.put(Constants.Constitution, statistics[2]);
+        statsNode.put(Constants.Intelligence, statistics[3]);
+        statsNode.put(Constants.Wisdom, statistics[4]);
+        statsNode.put(Constants.Charisma, statistics[5]);
         return statsNode;
     }
 }
