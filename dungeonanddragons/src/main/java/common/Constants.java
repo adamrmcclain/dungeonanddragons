@@ -5,13 +5,14 @@ package common;
  */
 public class Constants {
     //Common Constant Strings
-    public static String DoubleReturn = "\\n\\n";
-    public static String Return = "\\n";
+    public static String DoubleReturn = "\\r\\n\\r\\n";
+    public static String Return = "\\r\\n";
     public static String Comma = ",";
     public static String OpenParen = "\\(";
     public static String CloseParen = "\\)";
     public static String Tab = "\\t";
     public static String Empty = "";
+    public static String CapitalWordRegex = "[A-Z ]{3,}\\r\\n";
 
     //Monster Information
     public static String ArmorClass = "Armor Class";
@@ -40,7 +41,6 @@ public class Constants {
     public static String SavingThrows = "Saving Throws";
     public static String LegendaryActions = "LEGENDARY ACTIONS";
     public static String StatisticList = "STR\tDEX\tCON\tINT\tWIS\tCHA";
-    public static String CapitalWordRegex = "[A-Z ]{3,}\\n";
     public static String HitPonts = "Hit Points";
     public static String MonsterName = "Monster Name";
     public static String Reactions = "REACTIONS";

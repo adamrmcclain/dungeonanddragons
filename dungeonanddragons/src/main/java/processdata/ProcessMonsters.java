@@ -1,6 +1,5 @@
 package processdata;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -23,14 +22,15 @@ public class ProcessMonsters {
 
     public Monsters getMonsters(String monsterInput){
         JsonUtils jsonUtils = new JsonUtils();
-        JsonNode monsterNode = jsonUtils.getJsonNodeFromString(monsterInput);
-        return jsonUtils.mapJsonToMonster(monsterNode);
+        ObjectNode monstersNode =getMonsterList(monsterInput);
+        return jsonUtils.mapJsonToMonsters(jsonUtils.getJsonNodeFromString(monstersNode.toString()));
     }
 
     public ObjectNode getMonsterList(String monsterInput){
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode monsterNode = mapper.createObjectNode();
         monsterNode.putPOJO(Constants.Monsters, getMonsterArray(monsterInput));
+        System.out.println("ProcessMonsters.getMonsterList.monsterNode : "  + monsterNode.toString());
         return monsterNode;
     }
 
@@ -42,7 +42,6 @@ public class ProcessMonsters {
     private ArrayNode getMonsterJson(Collection<String> monsters) {
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode monsterNode = mapper.createArrayNode();
-
         monsters.stream().forEach(monster -> monsterNode.add(getMonsterJson(monster)));
 
         return monsterNode;
@@ -54,18 +53,10 @@ public class ProcessMonsters {
 
         List<String> monsterValues = Arrays.asList(monster.split(Constants.DoubleReturn));
 
-        String[] monsterNameSizeAlignment = monsterValues.get(0).split(Constants.Return);
-        String monsterName = monsterNameSizeAlignment[0];
-        String size = monsterNameSizeAlignment[1].split(Constants.Comma)[0].trim();
-        String alignment = monsterNameSizeAlignment[1].split(Constants.Comma)[1].trim();
-
-        monsterNode.put(Constants.MonsterName,monsterName);
-        monsterNode.put(Constants.Size,size);
-        monsterNode.put(Constants.Alignment,alignment);
+        attachInitialMonsterAttributes(monsterNode, monsterValues);
 
         int actionIndex = monsterValues.indexOf(Constants.Actions);
-        int legendaryIndex = monsterValues.indexOf(Constants.LegendaryActions);
-        int reactionIndex = monsterValues.indexOf(Constants.Reactions);
+
         int challengeIndex = 0;
 
         for (int i = 2; i < actionIndex; i++) {
@@ -77,9 +68,28 @@ public class ProcessMonsters {
         }
 
         if(challengeIndex != 0) {
-            monsterNode.putPOJO(Constants.AdditionalInformation, createArrayNode(monsterValues.subList(challengeIndex, actionIndex)));
+            monsterNode.putPOJO(Constants.AdditionalInformation, createArrayNode(monsterValues.subList(challengeIndex + 1, actionIndex)));
         }
 
+        attachActionNodes(monsterNode, monsterValues, actionIndex);
+        System.out.println("ProcessMonsters.getMonsterJson.monsterNode : " + monsterNode.toString());
+        return monsterNode;
+    }
+
+    private void attachInitialMonsterAttributes(ObjectNode monsterNode, List<String> monsterValues) {
+        String[] monsterNameSizeAlignment = monsterValues.get(0).split(Constants.Return);
+        String monsterName = monsterNameSizeAlignment[0];
+        String size = monsterNameSizeAlignment[1].split(Constants.Comma)[0].trim();
+        String alignment = monsterNameSizeAlignment[1].split(Constants.Comma)[1].trim();
+
+        monsterNode.put(Constants.MonsterName,monsterName);
+        monsterNode.put(Constants.Size,size);
+        monsterNode.put(Constants.Alignment,alignment);
+    }
+
+    private void attachActionNodes(ObjectNode monsterNode, List<String> monsterValues, int actionIndex) {
+        int legendaryIndex = monsterValues.indexOf(Constants.LegendaryActions);
+        int reactionIndex = monsterValues.indexOf(Constants.Reactions);
         if(legendaryIndex > -1){
             monsterNode.putPOJO(Constants.LegendaryActionsCamel, createArrayNode(monsterValues.subList(legendaryIndex + 1,monsterValues.size())));
             monsterNode.putPOJO(Constants.ActionsCamel, createArrayNode(monsterValues.subList(actionIndex + 1, legendaryIndex)));
@@ -90,10 +100,8 @@ public class ProcessMonsters {
         }
         else
         {
-            monsterNode.putPOJO(Constants.Actions, createArrayNode(monsterValues.subList(actionIndex + 1, monsterValues.size())));
+            monsterNode.putPOJO(Constants.ActionsCamel, createArrayNode(monsterValues.subList(actionIndex + 1, monsterValues.size())));
         }
-
-        return monsterNode;
     }
 
     private ArrayNode createArrayNode(List<String> info) {
@@ -114,9 +122,14 @@ public class ProcessMonsters {
         });*/
 
         for (int i = 0; i < monsterNames.size() ; i++) {
-            int startIndex = monsterInput.indexOf((String) monsterNames.toArray()[i]);
-            int endIndex = monsterNames.size() == i + 1 ? monsterInput.length() : monsterInput.indexOf((String) monsterNames.toArray()[i + 1]);
+            String currentMonster = (String) monsterNames.toArray()[i];
+            System.out.println("ProcessMonsters.getMonsterInformation.currentMonster : " + currentMonster);
+            String nextMonster = monsterNames.size() == i + 1 ? null : (String) monsterNames.toArray()[i + 1];
+            System.out.println("ProcessMonsters.getMonsterInformation.nextMonster : " + nextMonster);
+            int startIndex = monsterInput.indexOf(currentMonster);
+            int endIndex =nextMonster == null ? monsterInput.length() : monsterInput.indexOf(nextMonster,startIndex);
             String monster = monsterInput.substring(startIndex,endIndex);
+            System.out.println("ProcessMonsters.getMonsterInformation.monster : " + monster);
             monsterInfo.add(monster);
         }
         return monsterInfo;
@@ -127,10 +140,17 @@ public class ProcessMonsters {
         Pattern pattern = Pattern.compile(Constants.CapitalWordRegex);
         Matcher matcher = pattern.matcher(monsterInput);
 
+        System.out.println("ProcessMonster.findMonsterNames.monsterInput : " + monsterInput);
+        System.out.println("ProcessMonster.findMonsterNames.pattern : " + pattern.pattern());
+
         while(matcher.find()){
             String monsterName = matcher.group(0).trim();
-            if(!(monsterName.equals(Constants.CHA) || monsterName.equals(Constants.Actions) || monsterName.equals(Constants.LegendaryActions))){
+            if(!(monsterName.equals(Constants.CHA) ||
+                    monsterName.equals(Constants.Actions) ||
+                    monsterName.equals(Constants.LegendaryActions)||
+                    monsterName.equals(Constants.Reactions))){
                 monsterNames.add(monsterName);
+                System.out.println("ProcessMonsters.findMonsterNames.monsterName : " + monsterName);
             }
         }
 
@@ -141,13 +161,14 @@ public class ProcessMonsters {
     public boolean addAttributesToJson(ObjectNode monsterNode, String attribute) {
         ObjectMapper mapper = new ObjectMapper();
 
+
         if(attribute.startsWith(Constants.ArmorClass)){
             monsterNode.put(Constants.ArmorClass, attribute.replace(Constants.ArmorClass,Constants.Empty).trim());
             return false;
         }
 
         if(attribute.startsWith(Constants.HitPonts)){
-            monsterNode.put(Constants.ArmorClass, attribute.replace(Constants.ArmorClass,Constants.Empty).trim());
+            monsterNode.put(Constants.HitPonts, attribute.replace(Constants.HitPonts,Constants.Empty).trim());
             return false;
         }
 
@@ -210,7 +231,7 @@ public class ProcessMonsters {
     private void attachArrayNode(String attributeInput, String attributeName, ObjectNode rootNode) {
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode arrayNode = mapper.createArrayNode();
-        String[] attributes = attributeInput.replace(attributeName, Constants.Empty).split(Constants.Comma);
+        String[] attributes = attributeInput.replace(attributeName, Constants.Empty).trim().split(Constants.Comma);
         Stream<String> attributeStream = Stream.of(attributes);
         attributeStream.forEach(arrayNode::add);
         rootNode.putPOJO(attributeName,arrayNode);

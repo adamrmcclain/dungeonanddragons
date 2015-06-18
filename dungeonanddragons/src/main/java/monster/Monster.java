@@ -56,7 +56,7 @@ public class Monster {
     private String Speed;
     @JsonProperty("Stats")
     private monster.Stats Stats;
-    @JsonProperty
+    @JsonProperty("Saving Throws")
     private List<String> SavingThrows = new ArrayList<String>();
     @JsonProperty("Skills")
     private List<String> Skills = new ArrayList<String>();
@@ -405,12 +405,12 @@ public class Monster {
         this.AdditionalInformation = AdditionalInformation;
     }
 
-    @JsonProperty("Damage Immunties")
+    @JsonProperty("Damage Immunities")
     public List<String> getDamageImmunities() {
         return DamageImmunities;
     }
 
-    @JsonProperty("Damage Immunties")
+    @JsonProperty("Damage Immunities")
     public void setDamageImmunities(List<String> damageImmunities) {
         DamageImmunities = damageImmunities;
     }
@@ -425,12 +425,12 @@ public class Monster {
         DamageResistances = damageResistances;
     }
 
-    @JsonProperty("Condition Immunties")
+    @JsonProperty("Condition Immunities")
     public List<String> getConditionImmunities() {
         return ConditionImmunities;
     }
 
-    @JsonProperty("Condition Immunties")
+    @JsonProperty("Condition Immunities")
     public void setConditionImmunities(List<String> conditionImmunities) {
         ConditionImmunities = conditionImmunities;
     }

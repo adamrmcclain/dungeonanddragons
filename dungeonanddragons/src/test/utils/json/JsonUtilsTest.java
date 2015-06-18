@@ -1,9 +1,8 @@
 package utils.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import monster.Monster;
 import monster.Monsters;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -28,7 +27,29 @@ public class JsonUtilsTest {
     public void testMapJsonToMonster() throws Exception {
         JsonUtils jsonUtils = new JsonUtils();
         JsonNode monster = jsonUtils.getJsonNodeFromString(monsterJsonString);
-        Monsters monsters = jsonUtils.mapJsonToMonster(monster);
+        Monsters monsters = jsonUtils.mapJsonToMonsters(monster);
         assertEquals("AIR ELEMENTAL", monsters.getMonsters().get(0).getMonsterName());
+    }
+
+    @Test
+    public void testGetJsonNodeFromMonster() throws Exception {
+        JsonUtils jsonUtils = new JsonUtils();
+        JsonNode monster = jsonUtils.getJsonNodeFromString(monsterJsonString);
+        Monsters monsters = jsonUtils.mapJsonToMonsters(monster);
+        JsonNode airElemental = jsonUtils.getJsonNodeFromMonster(monsters.getMonsters().get(0));
+        System.out.println(airElemental.toString());
+        assertTrue(airElemental.toString().contains("AIR ELEMENTAL"));
+    }
+
+    @Test
+    public void testGetMonstersFromJsonNode(){
+        String input = "{\"Monster Name\":\"AIR ELEMENTAL\",\"Size\":\"Large elemental\",\"Alignment\":\"neutral\",\"Hit Points\":\"90 (12d10 + 24)\",\"Speed\":\"0 ft., fly 90 ft. (hover)\",\"Stats\":{\"Strength\":\"14 (+2)\",\"Dexterity\":\"20 (+5)\",\"Constitution\":\"14 (+2)\",\"Intelligence\":\"6 (-2)\",\"Wisdom\":\"10 (+0)\",\"Charisma\":\"6 (-2)\"},\"Saving Throws\":[],\"Skills\":[],\"Damage Immunities\":[\" poison\"],\"Damage Resistances\":[\" lightning\",\" thunder; bludgeoning\",\" piercing\",\" and slashing from nonmagical weapons\"],\"Condition Immunities\":[\" exhaustion\",\" grappled\",\" paralyzed\",\" petrified\",\" poisoned\",\" prone\",\" restrained\",\" unconscious\"],\"Senses\":[\" darkvision 60 ft.\",\" passive Perception 10\"],\"Languages\":[\" Auran\"],\"Challenge\":\" 5 \",\"Experience\":\"1,800 XP)\",\"Actions\":[\"Multiattack. The elemental makes two slam attacks.\",\"Slam. Melee Weapon Attack: +8 to hit, reach 5 ft., one target. Hit: 14 (2d8 + 5) bludgeoning damage.\",\"Whirlwind (Recharge 4?6). Each creature in the elemental?s space must make a DC 13 Strength saving throw. On a failure, a target takes 15 (3d8 + 2) bludgeoning damage and is flung up 20 feet away from the elemental in a random direction and knocked prone. If a thrown target strikes an object, such as a wall or floor, the target takes 3 (1d6) bludgeoning damage for every 10 feet it was thrown. If the target is thrown at another creature, that creature must succeed on a DC 13 Dexterity saving throw or take the same damage and be knocked prone.\\nIf the saving throw is successful, the target takes half the bludgeoning damage and isn?t flung away or knocked prone.\"],\"Legendary Actions\":[],\"Reactions\":[],\"Additional Information\":[\"Air Form. The elemental can enter a hostile creature?s space and stop there. It can move through a space as narrow as 1 inch wide without squeezing.\"]}";
+        JsonUtils jsonUtils = new JsonUtils();
+        JsonNode monster = jsonUtils.getJsonNodeFromString(input);
+        System.out.println(monster.toString());
+        String s = monster.get("Monster Name").asText();
+        Monster monsters = jsonUtils.mapJsonToMonster(monster);
+        assertEquals("AIR ELEMENTAL", s);
+        assertEquals("AIR ELEMENTAL", monsters.getMonsterName());
     }
 }
