@@ -1,0 +1,97 @@
+
+<div ng-controller="MonsterDetailsController">
+    <span ng-repeat="template in templates">
+        <link rel="import" ng-href="{{template.href}}"/>
+    </span>
+    <stat-block>
+        <creature-heading>
+            <h1>{{monsterStats.MonsterName}}</h1>
+            <h2>{{monsterStats.Size}}, {{monsterStats.Alignment}}</h2>
+        </creature-heading>
+
+        <top-stats>
+            <property-line>
+                <h4>Armor Class</h4>
+                <p>{{monsterStats.ArmorClass}}</p>
+            </property-line>
+            <property-line>
+                <h4>Hit Points</h4>
+                <p>{{monsterStats.HitPoints}}</p>
+            </property-line>
+            <property-line>
+                <h4>Speed</h4>
+                <p>{{monsterStats.Speed}}</p>
+            </property-line>
+
+            <abilities-block data-str="{{monsterStats.Stats.Strength}}"
+                             data-dex="{{monsterStats.Stats.Dexterity}}"
+                             data-con="{{monsterStats.Stats.Constitution}}"
+                             data-int="{{monsterStats.Stats.Intelligence}}"
+                             data-wis="{{monsterStats.Stats.Wisdom}}"
+                             data-cha="{{monsterStats.Stats.Charisma}}"></abilities-block>
+
+            <property-line id="damageImmunities">
+                <h4>Damage Immunities</h4>
+                <p><span ng-repeat="immunities in monsterStats.DamageImmunities">{{immunities}}{{$last ? '' : ', '}}</span></p>
+            </property-line>
+            <property-line id="conditionImmunities">
+                <h4>Condition Immunities</h4>
+                <p><span ng-repeat="immunities in monsterStats.ConditionImmunities">{{immunities}}{{$last ? '' : ', '}}</span></p>
+            </property-line>
+            <property-line id="damageResistances">
+                <h4>Damage Resistances</h4>
+                <p><span ng-repeat="resistance in monsterStats.DamageResistances">{{resistance}}{{$last ? '' : ', '}}</span></p>
+            </property-line>
+            <property-line id="senses">
+                <h4>Senses</h4>
+                <p><span ng-repeat="sense in monsterStats.Senses">{{sense}}{{$last ? '' : ', '}}</span></p>
+            </property-line>
+            <property-line id="savingThrows">
+                <h4>Saving Throws</h4>
+                <p><span ng-repeat="throws in monsterStats.SavingThrows">{{throws}}{{$last ? '' : ', '}}</span></p>
+            </property-line>
+            <property-line id="skills">
+                <h4>Skills</h4>
+                <p><span ng-repeat="skills in monsterStats.Skills">{{skills}}{{$last ? '' : ', '}}</span></p>
+            </property-line>
+            <property-line id="languages">
+                <h4>Languages</h4>
+                <p><span ng-repeat="language in monsterStats.Languages">{{language}}{{$last ? '' : ', '}}</span></p>
+            </property-line>
+            <property-line id="challenge">
+                <h4>Challenge</h4>
+                <p>{{monsterStats.Challenge}} ({{monsterStats.Experience}}</p>
+            </property-line>
+        </top-stats>
+
+        <property-block ng-repeat="info in monsterStats.AdditionalInformation">
+            <h4>{{info.split(".")[0]}}.</h4>
+            <p>{{info.replace(info.split(".")[0] + ".","").replace("'","&rsquo;")}}</p>
+        </property-block>
+
+        <h3>Actions</h3>
+
+        <property-block ng-repeat="action in monsterStats.Actions">
+            <h4>{{action.split(".")[0]}}.</h4>
+            <p>{{action.replace(action.split(".")[0] + ".","").replace("'","&rsquo;")}}</p>
+        </property-block>
+
+        <div id="reactions">
+            <h3>Reactions</h3>
+
+            <property-block ng-repeat="action in monsterStats.Reactions">
+                <h4>{{action.split(".")[0]}}.</h4>
+                <p>{{action.replace(action.split(".")[0] + ".","")}}</p>
+            </property-block>
+        </div>
+
+        <div id="legendary">
+            <h3>Legendary Actions</h3>
+
+            <property-block ng-repeat="action in monsterStats.LegendaryActions">
+                <h4>{{action.split(".")[0]}}.</h4>
+                <p>{{action.replace(action.split(".")[0] + ".","")}}</p>
+            </property-block>
+        </div>
+</stat-block>
+</div>
