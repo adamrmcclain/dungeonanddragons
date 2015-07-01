@@ -239,7 +239,7 @@ public class ProcessMonstersTest extends TestCase {
         JsonUtils jsonUtils = new JsonUtils();
         Monsters monsters1 = jsonUtils.mapJsonToMonsters(jsonUtils.getJsonNodeFromString(root.toString()));
 
-        assertEquals("16 (natural armor)", monsterAttributes.get(Constants.ArmorClass).asText());
+        assertEquals("16 (natural armor)", monsterAttributes.get(Constants.ArmorClass.replace(Constants.Space,Constants.Empty)).asText());
         assertEquals(monsters1.getMonsters().get(0).getStats().getStrength(), "17 (+3)");
     }
 

@@ -16,31 +16,31 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({
-    "Monster Name",
+    "MonsterName",
     "Size",
     "Race",
     "Alignment",
-    "Armor Class",
-    "Hit Points",
+    "ArmorClass",
+    "HitPoints",
     "Speed",
     "Stats",
-    "Saving Throws",
+    "SavingThrows",
     "Skills",
-    "Damage Immunities",
-    "Damage Resistances",
-    "Condition Immunities",
+    "DamageImmunities",
+    "DamageResistances",
+    "ConditionImmunities",
     "Senses",
     "Languages",
     "Challenge",
     "Experience",
     "Actions",
-    "Legendary Actions",
+    "LegendaryActions",
     "Reactions",
-    "Additional Information"
+    "AdditionalInformation"
 })
 public class Monster {
 
-    @JsonProperty("Monster Name")
+    @JsonProperty("MonsterName")
     private String MonsterName;
     @JsonProperty("Size")
     private String Size;
@@ -48,23 +48,23 @@ public class Monster {
     private String Race;
     @JsonProperty("Alignment")
     private String Alignment;
-    @JsonProperty("Armor Class")
+    @JsonProperty("ArmorClass")
     private String ArmorClass;
-    @JsonProperty("Hit Points")
+    @JsonProperty("HitPoints")
     private String HitPoints;
     @JsonProperty("Speed")
     private String Speed;
     @JsonProperty("Stats")
     private monster.Stats Stats;
-    @JsonProperty("Saving Throws")
+    @JsonProperty("SavingThrows")
     private List<String> SavingThrows = new ArrayList<String>();
     @JsonProperty("Skills")
     private List<String> Skills = new ArrayList<String>();
-    @JsonProperty("Damage Immunities")
+    @JsonProperty("DamageImmunities")
     private List<String> DamageImmunities= new ArrayList<String>();
-    @JsonProperty("Damage Resistances")
+    @JsonProperty("DamageResistances")
     private List<String> DamageResistances = new ArrayList<String>();
-    @JsonProperty("Condition Immunities")
+    @JsonProperty("ConditionImmunities")
     private List<String> ConditionImmunities = new ArrayList<String>();
     @JsonProperty("Senses")
     private List<String> Senses = new ArrayList<String>();
@@ -76,11 +76,11 @@ public class Monster {
     private String Experience;
     @JsonProperty("Actions")
     private List<String> Actions = new ArrayList<String>();
-    @JsonProperty("Legendary Actions")
+    @JsonProperty("LegendaryActions")
     private List<String> LegendaryActions = new ArrayList<String>();
     @JsonProperty("Reactions")
     private List<String> Reactions = new ArrayList<String>();
-    @JsonProperty("Additional Information")
+    @JsonProperty("AdditionalInformation")
     private List<String> AdditionalInformation = new ArrayList<String>();
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
@@ -90,7 +90,7 @@ public class Monster {
      * @return
      *     The MonsterName
      */
-    @JsonProperty("Monster Name")
+    @JsonProperty("MonsterName")
     public String getMonsterName() {
         return MonsterName;
     }
@@ -98,9 +98,9 @@ public class Monster {
     /**
      * 
      * @param MonsterName
-     *     The Monster Name
+     *     The MonsterName
      */
-    @JsonProperty("Monster Name")
+    @JsonProperty("MonsterName")
     public void setMonsterName(String MonsterName) {
         this.MonsterName = MonsterName;
     }
@@ -170,7 +170,7 @@ public class Monster {
      * @return
      *     The ArmorClass
      */
-    @JsonProperty("Armor Class")
+    @JsonProperty("ArmorClass")
     public String getArmorClass() {
         return ArmorClass;
     }
@@ -178,9 +178,9 @@ public class Monster {
     /**
      * 
      * @param ArmorClass
-     *     The Armor Class
+     *     The ArmorClass
      */
-    @JsonProperty("Armor Class")
+    @JsonProperty("ArmorClass")
     public void setArmorClass(String ArmorClass) {
         this.ArmorClass = ArmorClass;
     }
@@ -190,7 +190,7 @@ public class Monster {
      * @return
      *     The HitPoints
      */
-    @JsonProperty("Hit Points")
+    @JsonProperty("HitPoints")
     public String getHitPoints() {
         return HitPoints;
     }
@@ -198,9 +198,9 @@ public class Monster {
     /**
      * 
      * @param HitPoints
-     *     The Hit Points
+     *     The HitPoints
      */
-    @JsonProperty("Hit Points")
+    @JsonProperty("HitPoints")
     public void setHitPoints(String HitPoints) {
         this.HitPoints = HitPoints;
     }
@@ -370,7 +370,7 @@ public class Monster {
      * @return
      *     The LegendaryActions
      */
-    @JsonProperty("Legendary Actions")
+    @JsonProperty("LegendaryActions")
     public List<String> getLegendaryActions() {
         return LegendaryActions;
     }
@@ -378,9 +378,9 @@ public class Monster {
     /**
      * 
      * @param LegendaryActions
-     *     The Legendary Actions
+     *     The LegendaryActions
      */
-    @JsonProperty("Legendary Actions")
+    @JsonProperty("LegendaryActions")
     public void setLegendaryActions(List<String> LegendaryActions) {
         this.LegendaryActions = LegendaryActions;
     }
@@ -390,7 +390,7 @@ public class Monster {
      * @return
      *     The AdditionalInformation
      */
-    @JsonProperty("Additional Information")
+    @JsonProperty("AdditionalInformation")
     public List<String> getAdditionalInformation() {
         return AdditionalInformation;
     }
@@ -398,44 +398,44 @@ public class Monster {
     /**
      * 
      * @param AdditionalInformation
-     *     The Additional Information
+     *     The AdditionalInformation
      */
-    @JsonProperty("Additional Information")
+    @JsonProperty("AdditionalInformation")
     public void setAdditionalInformation(List<String> AdditionalInformation) {
         this.AdditionalInformation = AdditionalInformation;
     }
 
-    @JsonProperty("Damage Immunities")
+    @JsonProperty("DamageImmunities")
     public List<String> getDamageImmunities() {
         return DamageImmunities;
     }
 
-    @JsonProperty("Damage Immunities")
+    @JsonProperty("DamageImmunities")
     public void setDamageImmunities(List<String> damageImmunities) {
         DamageImmunities = damageImmunities;
     }
 
-    @JsonProperty("Damage Resistances")
+    @JsonProperty("DamageResistances")
     public List<String> getDamageResistances() {
         return DamageResistances;
     }
 
-    @JsonProperty("Damage Resistances")
+    @JsonProperty("DamageResistances")
     public void setDamageResistances(List<String> damageResistances) {
         DamageResistances = damageResistances;
     }
 
-    @JsonProperty("Condition Immunities")
+    @JsonProperty("ConditionImmunities")
     public List<String> getConditionImmunities() {
         return ConditionImmunities;
     }
 
-    @JsonProperty("Condition Immunities")
+    @JsonProperty("ConditionImmunities")
     public void setConditionImmunities(List<String> conditionImmunities) {
         ConditionImmunities = conditionImmunities;
     }
 
-    @JsonProperty("Saving Throws")
+    @JsonProperty("SavingThrows")
     public List<String> getSavingThrows() {
         return SavingThrows;
     }
@@ -450,7 +450,7 @@ public class Monster {
         return Reactions;
     }
 
-    @JsonProperty("Saving Throws")
+    @JsonProperty("SavingThrows")
     public void setSavingThrows(List<String> savingThrows) {
         SavingThrows = savingThrows;
     }

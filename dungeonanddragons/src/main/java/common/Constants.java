@@ -13,6 +13,7 @@ public class Constants {
     public static String Tab = "\\t";
     public static String Empty = "";
     public static String CapitalWordRegex = "[A-Z ]{3,}\\r\\n";
+	public static String Space = " ";
 
     //Monster Information
     public static String ArmorClass = "Armor Class";
@@ -36,15 +37,15 @@ public class Constants {
     public static String Stats = "Stats";
     public static String Challenge = "Challenge";
     public static String Experience = "Experience";
-    public static String AdditionalInformation = "Additional Information";
+    public static String AdditionalInformation = "AdditionalInformation";
     public static String DamageResistances = "Damage Resistances";
     public static String SavingThrows = "Saving Throws";
     public static String LegendaryActions = "LEGENDARY ACTIONS";
     public static String StatisticList = "STR\tDEX\tCON\tINT\tWIS\tCHA";
     public static String HitPonts = "Hit Points";
-    public static String MonsterName = "Monster Name";
+    public static String MonsterName = "MonsterName";
     public static String Reactions = "REACTIONS";
-    public static String LegendaryActionsCamel = "Legendary Actions";
+    public static String LegendaryActionsCamel = "LegendaryActions";
     public static String ActionsCamel = "Actions";
     public static String ReactionsCamel = "Reactions";
     public static String Monsters = "Monsters";

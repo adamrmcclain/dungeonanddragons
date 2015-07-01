@@ -30,7 +30,6 @@ public class ProcessMonsters {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode monsterNode = mapper.createObjectNode();
         monsterNode.putPOJO(Constants.Monsters, getMonsterArray(monsterInput));
-        System.out.println("ProcessMonsters.getMonsterList.monsterNode : "  + monsterNode.toString());
         return monsterNode;
     }
 
@@ -59,7 +58,7 @@ public class ProcessMonsters {
 
         int challengeIndex = 0;
 
-        for (int i = 2; i < actionIndex; i++) {
+        for (int i = 1; i < actionIndex; i++) {
             boolean isChallengeRow = addAttributesToJson(monsterNode, monsterValues.get(i));
             if(isChallengeRow){
                 challengeIndex = i;
@@ -72,7 +71,6 @@ public class ProcessMonsters {
         }
 
         attachActionNodes(monsterNode, monsterValues, actionIndex);
-        System.out.println("ProcessMonsters.getMonsterJson.monsterNode : " + monsterNode.toString());
         return monsterNode;
     }
 
@@ -123,13 +121,10 @@ public class ProcessMonsters {
 
         for (int i = 0; i < monsterNames.size() ; i++) {
             String currentMonster = (String) monsterNames.toArray()[i];
-            System.out.println("ProcessMonsters.getMonsterInformation.currentMonster : " + currentMonster);
             String nextMonster = monsterNames.size() == i + 1 ? null : (String) monsterNames.toArray()[i + 1];
-            System.out.println("ProcessMonsters.getMonsterInformation.nextMonster : " + nextMonster);
             int startIndex = monsterInput.indexOf(currentMonster);
             int endIndex =nextMonster == null ? monsterInput.length() : monsterInput.indexOf(nextMonster,startIndex);
             String monster = monsterInput.substring(startIndex,endIndex);
-            System.out.println("ProcessMonsters.getMonsterInformation.monster : " + monster);
             monsterInfo.add(monster);
         }
         return monsterInfo;
@@ -140,9 +135,6 @@ public class ProcessMonsters {
         Pattern pattern = Pattern.compile(Constants.CapitalWordRegex);
         Matcher matcher = pattern.matcher(monsterInput);
 
-        System.out.println("ProcessMonster.findMonsterNames.monsterInput : " + monsterInput);
-        System.out.println("ProcessMonster.findMonsterNames.pattern : " + pattern.pattern());
-
         while(matcher.find()){
             String monsterName = matcher.group(0).trim();
             if(!(monsterName.equals(Constants.CHA) ||
@@ -150,7 +142,6 @@ public class ProcessMonsters {
                     monsterName.equals(Constants.LegendaryActions)||
                     monsterName.equals(Constants.Reactions))){
                 monsterNames.add(monsterName);
-                System.out.println("ProcessMonsters.findMonsterNames.monsterName : " + monsterName);
             }
         }
 
@@ -163,12 +154,12 @@ public class ProcessMonsters {
 
 
         if(attribute.startsWith(Constants.ArmorClass)){
-            monsterNode.put(Constants.ArmorClass, attribute.replace(Constants.ArmorClass,Constants.Empty).trim());
+            monsterNode.put(Constants.ArmorClass.replace(Constants.Space,Constants.Empty), attribute.replace(Constants.ArmorClass,Constants.Empty).trim());
             return false;
         }
 
         if(attribute.startsWith(Constants.HitPonts)){
-            monsterNode.put(Constants.HitPonts, attribute.replace(Constants.HitPonts,Constants.Empty).trim());
+            monsterNode.put(Constants.HitPonts.replace(Constants.Space,Constants.Empty), attribute.replace(Constants.HitPonts,Constants.Empty).trim());
             return false;
         }
 
@@ -234,7 +225,7 @@ public class ProcessMonsters {
         String[] attributes = attributeInput.replace(attributeName, Constants.Empty).trim().split(Constants.Comma);
         Stream<String> attributeStream = Stream.of(attributes);
         attributeStream.forEach(arrayNode::add);
-        rootNode.putPOJO(attributeName,arrayNode);
+        rootNode.putPOJO(attributeName.replace(Constants.Space,Constants.Empty),arrayNode);
     }
 
     private ObjectNode getStatisticsNode(String attribute, ObjectMapper mapper) {

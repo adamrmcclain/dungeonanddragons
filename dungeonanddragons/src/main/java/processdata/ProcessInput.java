@@ -1,8 +1,9 @@
 package processdata;
 
-import dataaccess.MongoConnection;
 import monster.Monsters;
+import org.springframework.web.client.RestTemplate;
 import utils.errorlogging.ErrorLogging;
+import utils.json.JsonUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,11 +23,13 @@ public class ProcessInput {
             try {
                 Path path = Paths.get(fileName);
                 String monsterInput = new String(Files.readAllBytes(path));
-                System.out.println("monster string : " + monsterInput);
                 ProcessMonsters processMonsters = new ProcessMonsters();
                 Monsters monsters = processMonsters.getMonsters(monsterInput);
-                MongoConnection mongoConnection = new MongoConnection();
-                mongoConnection.postMonsters(monsters);
+
+                JsonUtils jsonUtils = new JsonUtils();
+
+                RestTemplate dndService = new RestTemplate();
+                monsters.getMonsters().parallelStream().forEach(monster -> System.out.println(dndService.postForObject("http://localhost:3000/monsters", jsonUtils.getJsonNodeFromMonster(monster),String.class)));
             } catch (IOException e) {
                 Map<String, Object> inputs = new HashMap<>();
                 inputs.put("args", args);
