@@ -15,7 +15,32 @@ monsterControllers.controller("MonsterController", ['$scope', 'MonsterList',
     function($scope, MonsterList){
         MonsterList.success(function(data){
             $scope.monsterList = data;
+            $scope.predicate = "MonsterName";
+
+               angular.forEach($scope.monsterList, function (monster) {
+               console.log(monster.MonsterName);
+               console.log(monster.Challenge);
+                if(!(angular.isNumber(monster.Challenge)) && (monster.Challenge) && (monster.Challenge.indexOf("/") > -1)){
+                    var challengeArray = monster.Challenge.split("/");
+                    var num = parseFloat(challengeArray[0]);
+                    var dom = parseFloat(challengeArray[1]);
+                    monster.Challenge = num/dom;
+                }else{
+                    monster.Challenge = parseFloat(monster.Challenge);
+                }
+               });
+
             $scope.monsterStats = null;
+            $scope.order = function(predicate) {
+                $scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
+                $scope.predicate = predicate;
+            };
+
+            $scope.filterNumber = function(node){
+                console.log(node.MonsterName);
+                console.log(node.Challenge);
+                return !(isNaN(node.Challenge));
+            }
         })
     }]);
 
@@ -26,13 +51,13 @@ Monster.success(function(data){
       console.log(data);
         $scope.monsterStats = data[0];
         $scope.templates = [
-            {"href":"templates/top-stats.html"},
-            {"href":"templates/creature-heading.html"},
-            {"href":"templates/abilities-block.html"},
-            {"href":"templates/abilities-block.html"},
-            {"href":"templates/property-block.html"},
-            {"href":"templates/property-line.html"},
-            {"href":"templates/stat-block.html"}
+            {"href":"templates/monster/top-stats.html"},
+            {"href":"templates/monster/creature-heading.html"},
+            {"href":"templates/monster/abilities-block.html"},
+            {"href":"templates/monster/abilities-block.html"},
+            {"href":"templates/monster/property-block.html"},
+            {"href":"templates/monster/property-line.html"},
+            {"href":"templates/monster/stat-block.html"}
         ];
 
         hideActions();
