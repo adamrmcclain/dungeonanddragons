@@ -13,11 +13,28 @@ monsterControllers.factory('Monster', ['$http','$routeParams', function($http,$r
 
 monsterControllers.controller("MonsterController", ['$scope', 'MonsterList',
     function($scope, MonsterList){
+        $scope.predicate = "MonsterName";
+        $scope.monsterStats = null;
+        $scope.curPage = 0;
+        $scope.pageSize = 20;
+
+        $scope.order = function(predicate) {
+            $scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
+            $scope.predicate = predicate;
+        };
+
+        $scope.filterNumber = function(node){
+            return !(isNaN(node.Challenge));
+        };
+
         MonsterList.success(function(data){
             $scope.monsterList = data;
-            $scope.predicate = "MonsterName";
 
-               angular.forEach($scope.monsterList, function (monster) {
+            $scope.numberOfPages = function() {
+                return Math.ceil($scope.monsterList.length / $scope.pageSize);
+            };
+
+            angular.forEach($scope.monsterList, function (monster) {
                console.log(monster.MonsterName);
                console.log(monster.Challenge);
                 if(!(angular.isNumber(monster.Challenge)) && (monster.Challenge) && (monster.Challenge.indexOf("/") > -1)){
@@ -28,21 +45,16 @@ monsterControllers.controller("MonsterController", ['$scope', 'MonsterList',
                 }else{
                     monster.Challenge = parseFloat(monster.Challenge);
                 }
-               });
-
-            $scope.monsterStats = null;
-            $scope.order = function(predicate) {
-                $scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
-                $scope.predicate = predicate;
-            };
-
-            $scope.filterNumber = function(node){
-                console.log(node.MonsterName);
-                console.log(node.Challenge);
-                return !(isNaN(node.Challenge));
-            }
+            });
         })
     }]);
+
+monsterControllers.filter('pagination',function(){
+    return function(input,start){
+        start = +start;
+        return input.slice(start);
+    };
+});
 
 monsterControllers.controller('MonsterDetailsController', ['$scope', '$routeParams', 'Monster',
   function($scope, $routeParams, Monster) {

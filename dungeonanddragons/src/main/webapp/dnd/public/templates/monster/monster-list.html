@@ -1,4 +1,21 @@
 <div ng-controller="MonsterController">
+    <style type="text/css">
+        tr  {
+            color: #7A200D;
+            background: #FDF1DC;
+        }
+        a:link {
+            color: #A64D4D;
+            text-decoration: underline;
+        }
+        a:visited{
+            color: #800000;
+            text-decoration: underline;
+        }
+        a:hover {
+            color: #971919;
+        }
+    </style>
     <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap/css/bootstrap.css">
     <div class="container">
         <table class="table">
@@ -18,13 +35,32 @@
             </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="monster in monsterList | orderBy:predicate:false |filter:filterNumber">
+                <tr class="paginationclass" ng-repeat="monster in monsterList | orderBy:predicate:false |filter:filterNumber |
+                    pagination: curPage * pageSize | limitTo: pageSize">
                     <td><a ng-href="/#/monster/{{monster.MonsterName}}">{{monster.MonsterName}}</a></td>
                     <td>{{monster.Challenge}}</td>
                     <td>{{monster.Experience.replace(")","")}}</td>
                 </tr>
             </tbody>
         </table>
+
+        <div class="pagination pagination-centered" ng-show="monsterList.length">
+            <ul class="pagination-controle pagination">
+                <li>
+                    <button type="button" class="btn btn-primary" ng-disabled="curPage == 0"
+                            ng-click="curPage=curPage-1"> &lt; PREV</button>
+                </li>
+                <li>
+                    <span>Page {{curPage + 1}} of {{ numberOfPages() }}</span>
+                </li>
+                <li>
+                    <button type="button" class="btn btn-primary"
+                            ng-disabled="curPage >= monsterList.length/pageSize - 1"
+                            ng-click="curPage = curPage+1">NEXT &gt;</button>
+                </li>
+            </ul>
+        </div>
+
     </div>
 
 </div>
